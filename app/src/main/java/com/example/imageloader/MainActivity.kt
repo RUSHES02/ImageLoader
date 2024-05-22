@@ -26,32 +26,40 @@ class MainActivity : AppCompatActivity() {
         val imagesAdapter = ImagesAdapter(this)
         binding.recyclerViewMain.adapter = imagesAdapter
 
-        if(CheckNetwork.isInternetAvailable(this)){
-            imageViewModel.images.observe(this, Observer { images ->
+        imageViewModel.images.observe(this, Observer { images ->
 //            val a : MutableList<Images> = mutableListOf()
 //            a.add(images)
-                imagesAdapter.saveData(images)
-            })
+            imagesAdapter.saveData(images)
+        })
 
-            // Fetch images
+        // Fetch images
+        if(CheckNetwork.isInternetAvailable(this)){
             imageViewModel.fetchImages()
+        }else{
+            Toast.makeText(this, "No Internet", Toast.LENGTH_SHORT).show()
+        }
 
-            binding.recyclerViewMain.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
+
+        binding.recyclerViewMain.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
 
 //                val layoutManager = recyclerView.layoutManager as GridLayoutManager
 //                val visibleItemCount = layoutManager.childCount
 //                val totalItemCount = layoutManager.itemCount
 //                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
-                    if (!recyclerView.canScrollVertically(1)) { // Check if we have reached the bottom
+                if (!recyclerView.canScrollVertically(1)) { // Check if we have reached the bottom
+                    if(CheckNetwork.isInternetAvailable(recyclerView.context)){
                         imageViewModel.fetchImages() // Load more images
+                    }else{
+                        Toast.makeText(recyclerView.context, "No Internet", Toast.LENGTH_SHORT).show()
                     }
+
                 }
-            })
-        }else{
-            Toast.makeText(this, "No Internet", Toast.LENGTH_SHORT).show()
-        }
+            }
+        })
+
+
     }
 }
