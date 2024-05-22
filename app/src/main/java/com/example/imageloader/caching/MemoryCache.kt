@@ -12,7 +12,7 @@ class MemoryCache {
 
     private fun calculateCacheSize(): Int {
         val maxMemory = (Runtime.getRuntime().maxMemory() / 1024).toInt()
-        return maxMemory / 8 // Use 1/8th of the available memory for caching
+        return maxMemory / 8
     }
 
     fun getBitmap(key: String): Bitmap? {

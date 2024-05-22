@@ -36,10 +36,11 @@ class ImagesAdapter(private val context: Context): RecyclerView.Adapter<ImagesAd
 
 
     inner class ImagesViewHolder(val binding : ImageHolderBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(context: Context, url: String) {
-            // Use the ImageLoader to load the image asynchronously
+        fun bind(image: Images) {
+            binding.imageView.tag = image.urls.small
+            binding.imageView.setImageDrawable(null)
             CoroutineScope(Dispatchers.Main).launch {
-                Loader.loadImageIntoImageView(context, url, binding.imageView)
+                Loader.loadImageIntoImageView(binding.imageView, image.urls.small)
             }
         }
     }
@@ -55,6 +56,6 @@ class ImagesAdapter(private val context: Context): RecyclerView.Adapter<ImagesAd
 
     override fun onBindViewHolder(holder: ImagesViewHolder, position: Int) {
         val image = differ.currentList[position]
-        holder.bind(context, image.urls.regular)
+        holder.bind(image)
     }
 }
